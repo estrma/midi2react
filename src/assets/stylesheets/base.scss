@@ -1,6 +1,27 @@
-h1 {
+html, body {
+  height: 100%;
+  overflow: hidden;
+  color: white;
+  background-color: #0b091d;
+}
+
+body {
   font-family: helvetica;
-  font-weight: 200;
+  font-weight: 400;
+
+}
+
+.rect {
+  height: 100%;
+  width: 100px;
+  background: linear-gradient(to top, darkred, #0b091d);
+  background-position-y: -400px;
+
+  transition: all 200ms ease-in-out;
+  &.back {
+    background-position-y: 0px;
+    //background: linear-gradient(to top, darkred, #0b091d);
+  }
 }
 
 .channel_columns {
@@ -8,8 +29,9 @@ h1 {
   z-index: 999;
   top: 0;
   right: 0;
+
   h1 {
-    font-size: 1rem;
+    font-size: .8rem;
   }
   .channel_column {
     width: 100px;

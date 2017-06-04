@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import WebMidi from 'webmidi';
-
+import mojs from 'mo-js'
 import 'src/assets/stylesheets/base.scss';
+import anime from 'animejs';
 
 
 class App extends Component {
@@ -46,7 +47,22 @@ class App extends Component {
 
     componentDidMount() {
 
+        const burst = new mojs.Burst();
+        const rect = document.getElementById('rect')
 
+
+        this.setState(
+            {
+                burst: burst,
+                rect: rect
+            }
+        )
+
+
+    }
+
+    rand_pos(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     note_on(e) {
@@ -71,17 +87,51 @@ class App extends Component {
         }
 
 
-        e.note.opacity = Math.ceil(e.velocity * 10) / 10;
+        let velocity = e.note.opacity = Math.ceil(e.velocity * 10) / 10;
         e.note.channel = e.channel;
         let index = note + octave;
 
         if (on) {
+
             notes[index] = e.note;
+
+
+            if (e.channel == 1) {
+                const colors = [
+                    {'cyan': 'yellow'},
+                    {'red': 'green'},
+                    {'pink': 'yellow'},
+                    {'white': 'aqua'},
+                ];
+
+
+                this.state.burst.tune({
+                    radius: {0: 300 * velocity},
+                    count: 7,
+                    x: this.rand_pos(-400, 200),
+                    y: this.rand_pos(-400, 200),
+                    angle: {0: 90},
+                    opacity: velocity,
+                    duration: 1000,
+                    children: {
+                        fill: colors[0],
+                        radius: 20 * velocity,
+                    }
+                }).replay();
+            }
+
+
+            if (e.channel == 2) {
+
+                this.state.rect.classList.toggle('back')
+
+
+            }
+
         } else {
             delete notes[index];
 
         }
-        console.log(e)
 
 
         this.setState({notes: notes});
@@ -118,7 +168,7 @@ class App extends Component {
             channels = this.state.channels.map(c => {
 
                 let notes_by_channel = notes.filter(n => {
-                    console.log(n, c)
+
                     return n.channel == c
                 })
                     .map((note, i) => <li
@@ -128,7 +178,7 @@ class App extends Component {
                     </li>);
 
                 return (
-                    <div className="channel_column">
+                    <div key={'channel_' + c} className="channel_column">
                         <h1>{c}</h1>
                         <ul>{notes_by_channel}</ul>
                     </div>
