@@ -1,11 +1,14 @@
+# IAC MIDI / Node / React
 
-## up and running
+Virtual MIDI bus: from Live to browser
+
+#### Up and running:
 Install:
 ```
 $ yarn
 ```
 
-Dev server (`http://localhost:8080/`):
+Dev server (default: `http://localhost:8080/`):
 ```
 $ yarn dev
 ```
