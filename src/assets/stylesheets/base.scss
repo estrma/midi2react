@@ -1,0 +1,18 @@
+h1 {
+  font-family: helvetica;
+  font-weight: 200;
+}
+
+.channel_columns {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  h1 {
+    font-size: 1rem;
+  }
+  .channel_column {
+    width: 100px;
+    float: left;
+  }
+}
