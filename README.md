@@ -22,3 +22,8 @@ Ableton Live:
 Preferences -> Link MIDI -> Midi Ports -> [IAC port] output: ON
 MIDI Track -> MIDI To [IAC port] -> set channel
 ```
+
+
+#### Todo:
+
+* Fancy animations for each channel (mo.js?)
