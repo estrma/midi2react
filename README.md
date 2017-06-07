@@ -1,6 +1,7 @@
 # IAC MIDI / Node / React
 
-Virtual MIDI bus: from Live to browser
+Virtual MIDI bus experiment: from IAC driver to browser 
+
 
 #### Up and running:
 Install:
