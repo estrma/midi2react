@@ -26,4 +26,5 @@ MIDI Track -> MIDI To [IAC port] -> set channel
 
 #### Todo:
 
-* Fancy animations for each channel (mo.js?)
+* Fancy animations 
+* Animation assignment for each channel
