@@ -11,7 +11,7 @@ const rand_pos = (min, max) => {
 const animations = {
     1: {
         name: 'burst',
-        anim: (el, e) => {
+        anim: (e) => {
             let velocity = e.velocity;
             let colors = [
                 {'cyan': 'yellow'},
@@ -20,6 +20,8 @@ const animations = {
                 {'white': 'aqua'},
             ];
 
+
+            let el = new mojs.Burst();
 
             el.tune({
                 radius: {0: 300 * velocity},
@@ -38,8 +40,19 @@ const animations = {
     },
     2: {
         name: 'rect',
-        anim: (el, e) => {
-            el.classList.toggle('back');
+        anim: (e) => {
+            let on = e.type == 'noteon';
+            on && document.getElementById('rect').classList.toggle('back');
+        }
+    },
+    3: {
+        name: 'cir',
+        anim: (e) => {
+            let el = document.getElementById('cir');
+            let on = e.type == 'noteon';
+
+            el.classList[on ? 'add' : 'remove']('back');
+
         }
     }
 }
@@ -86,17 +99,6 @@ class App extends Component {
 
     componentDidMount() {
 
-        const burst = new mojs.Burst();
-        const rect = document.getElementById('rect')
-
-
-        this.setState(
-            {
-                burst: burst,
-                rect: rect
-            }
-        )
-
 
     }
 
@@ -131,20 +133,13 @@ class App extends Component {
 
             notes[index] = e.note;
 
-            let anim = animations[channel];
-
-            let el = this.state[anim.name];
-
-            console.log(anim, el)
-
-            anim.anim(el, e)
-
 
         } else {
             delete notes[index];
 
         }
 
+        animations[channel].anim(e)
 
         this.setState({notes: notes});
 
@@ -157,7 +152,7 @@ class App extends Component {
         inputs.forEach((input) => {
             input.addListener('noteon', "all", this.note_on.bind(this));
             input.addListener('noteoff', "all", this.note_on.bind(this));
-            //  input.addListener('noteoff', "all", this.note_off.bind(this));
+
         });
 
 
@@ -177,26 +172,31 @@ class App extends Component {
 
             let notes = Object.values(this.state.notes);
 
-            channels = this.state.channels.map(c => {
 
-                let notes_by_channel = notes.filter(n => {
-
-                    return n.channel == c
+            channels = this.state.channels
+                .sort((a, b) => {
+                    return a - b;
                 })
-                    .map((note, i) => <li
-                        key={'note_' + i}
-                        style={{opacity: note.opacity}}>
-                        {note.name + note.octave}
-                    </li>);
+                .map(c => {
 
-                return (
-                    <div key={'channel_' + c} className="channel_column">
-                        <h1>{c}</h1>
-                        <ul>{notes_by_channel}</ul>
-                    </div>
-                );
+                    let notes_by_channel = notes.filter(n => {
 
-            });
+                        return n.channel == c
+                    })
+                        .map((note, i) => <li
+                            key={'note_' + i}
+                            style={{opacity: note.opacity}}>
+                            {note.name + note.octave}
+                        </li>);
+
+                    return (
+                        <div key={'channel_' + c} className="channel_column">
+                            <h1>{c}</h1>
+                            <ul>{notes_by_channel}</ul>
+                        </div>
+                    );
+
+                });
 
 
         } else {
