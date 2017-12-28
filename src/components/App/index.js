@@ -5,6 +5,45 @@ import mojs from 'mo-js'
 import 'src/assets/stylesheets/base.scss';
 import anime from 'animejs';
 
+const rand_pos = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+const animations = {
+    1: {
+        name: 'burst',
+        anim: (el, e) => {
+            let velocity = e.velocity;
+            let colors = [
+                {'cyan': 'yellow'},
+                {'red': 'green'},
+                {'pink': 'yellow'},
+                {'white': 'aqua'},
+            ];
+
+
+            el.tune({
+                radius: {0: 300 * velocity},
+                count: 7,
+                x: rand_pos(-400, 200),
+                y: rand_pos(-400, 200),
+                angle: {0: 90},
+                opacity: velocity,
+                duration: 1000,
+                children: {
+                    fill: colors[0],
+                    radius: 20 * velocity,
+                }
+            }).replay();
+        }
+    },
+    2: {
+        name: 'rect',
+        anim: (el, e) => {
+            el.classList.toggle('back');
+        }
+    }
+}
+
 
 class App extends Component {
     constructor(props) {
@@ -61,9 +100,6 @@ class App extends Component {
 
     }
 
-    rand_pos(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
 
     note_on(e) {
         let notes = this.state.notes,
@@ -73,12 +109,14 @@ class App extends Component {
         let on = e.type == 'noteon';
 
 
-        let channel = e.channel,
+        let channel = e.note.channel = e.channel,
             num = e.note.number,
             note = e.note.name,
             octave = e.note.octave,
             vel = e.rawVelocity,
             stamp = e.timestamp;
+
+        let velocity = e.note.opacity = Math.ceil(e.velocity * 10) / 10;
 
 
         if (!channels.includes(channel)) {
@@ -87,46 +125,20 @@ class App extends Component {
         }
 
 
-        let velocity = e.note.opacity = Math.ceil(e.velocity * 10) / 10;
-        e.note.channel = e.channel;
         let index = note + octave;
 
         if (on) {
 
             notes[index] = e.note;
 
+            let anim = animations[channel];
 
-            if (e.channel == 1) {
-                const colors = [
-                    {'cyan': 'yellow'},
-                    {'red': 'green'},
-                    {'pink': 'yellow'},
-                    {'white': 'aqua'},
-                ];
+            let el = this.state[anim.name];
 
+            console.log(anim, el)
 
-                this.state.burst.tune({
-                    radius: {0: 300 * velocity},
-                    count: 7,
-                    x: this.rand_pos(-400, 200),
-                    y: this.rand_pos(-400, 200),
-                    angle: {0: 90},
-                    opacity: velocity,
-                    duration: 1000,
-                    children: {
-                        fill: colors[0],
-                        radius: 20 * velocity,
-                    }
-                }).replay();
-            }
+            anim.anim(el, e)
 
-
-            if (e.channel == 2) {
-
-                this.state.rect.classList.toggle('back')
-
-
-            }
 
         } else {
             delete notes[index];
