@@ -20,11 +20,10 @@ const animations = {
                 {'white': 'aqua'},
             ];
 
-
             let el = new mojs.Burst();
 
             el.tune({
-                radius: {0: 300 * velocity},
+                radius: {0: 200 * velocity},
                 count: 7,
                 x: rand_pos(-400, 200),
                 y: rand_pos(-400, 200),
@@ -50,7 +49,6 @@ const animations = {
         anim: (e) => {
             let el = document.getElementById('cir');
             let on = e.type == 'noteon';
-
             el.classList[on ? 'add' : 'remove']('back');
 
         }
@@ -93,9 +91,6 @@ class App extends Component {
 
     }
 
-    componentWillReceiveProps(next) {
-
-    }
 
     componentDidMount() {
 
@@ -112,13 +107,11 @@ class App extends Component {
 
 
         let channel = e.note.channel = e.channel,
-            num = e.note.number,
             note = e.note.name,
-            octave = e.note.octave,
-            vel = e.rawVelocity,
-            stamp = e.timestamp;
+            octave = e.note.octave; // 0-10
 
-        let velocity = e.note.opacity = Math.ceil(e.velocity * 10) / 10;
+
+        e.note.opacity = Math.ceil(e.velocity * 10) / 10;
 
 
         if (!channels.includes(channel)) {
@@ -130,19 +123,16 @@ class App extends Component {
         let index = note + octave;
 
         if (on) {
-
             notes[index] = e.note;
-
 
         } else {
             delete notes[index];
 
         }
 
-        animations[channel].anim(e)
 
         this.setState({notes: notes});
-
+        animations[channel].anim(e);
 
     }
 

@@ -47,13 +47,23 @@ body {
   position: fixed;
   z-index: 999;
   top: 0;
-  right: 0;
+  left: 0;
+  padding: 1rem;
+  font-size: .7rem;
+  h1, h2 {
+    font-size: inherit;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    font-weight: normal;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 
-  h1 {
-    font-size: .8rem;
   }
   .channel_column {
-    width: 100px;
+    width: 50px;
     float: left;
   }
 }
